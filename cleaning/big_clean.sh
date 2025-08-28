@@ -7,12 +7,13 @@ argpath="$(pwd)/$1"
 tempdir=$(mktemp -d)
 # Extract the tar into the temp directory
 tar -xzf "$argpath" -C "$tempdir"
-# Move into temp dir
-cd $tempdir
-# use find & grep to delete files with "DELETE ME!"
-find . -type f -print0 | xargs -0 grep -l "DELETE ME!" | xargs rm -f
-# return to previous directory
-cd ..
-# create new archive
-newdir="cleaned_$1"
-tar -czf "$newdir" -C "$tempdir"
+# move to temp
+cd "$tempdir"
+# use find & grep to delete files with "DELETE ME! 
+find "$tempdir" -type f -print0 | xargs -0 grep -l "DELETE ME!" | xargs rm -f
+# move back to original directory
+cd -
+# creating the new name for the archive
+newdir="cleaned_$(basename "$1")"
+# creating the new archive
+tar -czf "$newdir" -C "$tempdir" "$(ls -A "$tempdir")"
