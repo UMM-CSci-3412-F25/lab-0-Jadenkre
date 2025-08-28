@@ -8,11 +8,11 @@ tempdir=$(mktemp -d)
 # Extract the tar into the temp directory
 tar -xzf "$argpath" -C "$tempdir"
 # move to temp
-cd "$tempdir"
+cd "$tempdir" || exit
 # use find & grep to delete files with "DELETE ME! 
 find "$tempdir" -type f -print0 | xargs -0 grep -l "DELETE ME!" | xargs rm -f
 # move back to original directory
-cd -
+cd - || exit
 # creating the new name for the archive
 newdir="cleaned_$(basename "$1")"
 # creating the new archive
